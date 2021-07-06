@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  offerdb:
+    image: postgres
+
+
+  pgadmin:
+    image: dpage/pgadmin4
+
+  portainer:
+    image: portainer/portainer-ce
+  offer.api:
+    image: ${DOCKER_REGISTRY-}offerapi
+    build:
+      context: .
+      dockerfile: src/Offer.API/Dockerfile
+
+volumes:
+  portainer_data:
+  postgres_data:
+  pgadmin_data:

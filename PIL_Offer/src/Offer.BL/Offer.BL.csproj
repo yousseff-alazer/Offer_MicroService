@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Offer.CommonDefinitions\Offer.CommonDefinitions.csproj" />
+    <ProjectReference Include="..\Offer.DAL\Offer.DAL.csproj" />
+    <ProjectReference Include="..\Offer.Helpers\Offer.Helpers.csproj" />
+  </ItemGroup>
+
+</Project>
