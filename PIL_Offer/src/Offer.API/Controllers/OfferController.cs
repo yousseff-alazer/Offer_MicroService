@@ -86,8 +86,8 @@ namespace Offer.API.Controllers
         }
 
         [HttpPost]
-        [Route("Claim")]
-        public IActionResult Claim([FromBody] OfferUserRequest model)
+        [Route("Redeem")]
+        public IActionResult Redeem([FromBody] OfferUserRequest model)
         {
             if (model == null)
             {
