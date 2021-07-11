@@ -3,15 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.218
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offer.API", "src\Offer.API\Offer.API.csproj", "{D714D838-CD3E-455D-A033-89178E30AF33}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offer.Helpers", "src\Offer.Helpers\Offer.Helpers.csproj", "{03B7EA5F-1EBD-4180-9C53-1E11E004DB29}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offer.DAL", "src\Offer.DAL\Offer.DAL.csproj", "{9FE80BBE-A07C-4568-934D-B0A8FBFB591E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offer.BL", "src\Offer.BL\Offer.BL.csproj", "{C27904E5-B567-401A-8516-1F21D225E055}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offer.CommonDefinitions", "src\Offer.CommonDefinitions\Offer.CommonDefinitions.csproj", "{FEC454DD-9E88-466F-8F31-D0AB5AF7449C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offer.API", "src\Offer.API\Offer.API.csproj", "{D714D838-CD3E-455D-A033-89178E30AF33}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2D4BF2D5-D299-4B08-8E4E-B428EA473358}"
 EndProject
@@ -25,22 +17,6 @@ Global
 		{D714D838-CD3E-455D-A033-89178E30AF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D714D838-CD3E-455D-A033-89178E30AF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D714D838-CD3E-455D-A033-89178E30AF33}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03B7EA5F-1EBD-4180-9C53-1E11E004DB29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03B7EA5F-1EBD-4180-9C53-1E11E004DB29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03B7EA5F-1EBD-4180-9C53-1E11E004DB29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03B7EA5F-1EBD-4180-9C53-1E11E004DB29}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9FE80BBE-A07C-4568-934D-B0A8FBFB591E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9FE80BBE-A07C-4568-934D-B0A8FBFB591E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9FE80BBE-A07C-4568-934D-B0A8FBFB591E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9FE80BBE-A07C-4568-934D-B0A8FBFB591E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C27904E5-B567-401A-8516-1F21D225E055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C27904E5-B567-401A-8516-1F21D225E055}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C27904E5-B567-401A-8516-1F21D225E055}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C27904E5-B567-401A-8516-1F21D225E055}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEC454DD-9E88-466F-8F31-D0AB5AF7449C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEC454DD-9E88-466F-8F31-D0AB5AF7449C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEC454DD-9E88-466F-8F31-D0AB5AF7449C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEC454DD-9E88-466F-8F31-D0AB5AF7449C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2D4BF2D5-D299-4B08-8E4E-B428EA473358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D4BF2D5-D299-4B08-8E4E-B428EA473358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D4BF2D5-D299-4B08-8E4E-B428EA473358}.Release|Any CPU.ActiveCfg = Release|Any CPU

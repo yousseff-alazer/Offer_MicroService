@@ -7,10 +7,6 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["src/Offer.API/Offer.API.csproj", "src/Offer.API/"]
-COPY ["src/Offer.BL/Offer.BL.csproj", "src/Offer.BL/"]
-COPY ["src/Offer.CommonDefinitions/Offer.CommonDefinitions.csproj", "src/Offer.CommonDefinitions/"]
-COPY ["src/Offer.DAL/Offer.DAL.csproj", "src/Offer.DAL/"]
-COPY ["src/Offer.Helpers/Offer.Helpers.csproj", "src/Offer.Helpers/"]
 RUN dotnet restore "src/Offer.API/Offer.API.csproj"
 COPY . .
 WORKDIR "/src/src/Offer.API"

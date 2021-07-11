@@ -18,16 +18,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Npgsql" Version="5.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Offer.BL\Offer.BL.csproj" />
-    <ProjectReference Include="..\Offer.CommonDefinitions\Offer.CommonDefinitions.csproj" />
-    <ProjectReference Include="..\Offer.DAL\Offer.DAL.csproj" />
-    <ProjectReference Include="..\Offer.Helpers\Offer.Helpers.csproj" />
   </ItemGroup>
 </Project>
