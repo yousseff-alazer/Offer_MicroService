@@ -1,5 +1,4 @@
 ﻿using Offer.CommonDefinitions.Records;
-using Offer.DAL.DB;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +22,9 @@ namespace Offer.BL.Services
                  {
                      var query = request._context.OfferUsers.Where(c => !c.Isdeleted).Select(c => new OfferUserRecord
                      {
-                         Id = c.Id
+                         Id = c.Id,
+                         Offerid = c.Offerid,
+                         Userid = c.Userid
                      });
 
                      if (request.OfferUserRecord != null)
@@ -101,7 +102,7 @@ namespace Offer.BL.Services
                     if (offerUser != null)
                     {
                         //update whole offerUser
-                        offerUser = OfferUserServiceManager.AddOrEditOfferUser(request.BaseUrl, request.CreatedBy, request.OfferUserRecord, offerUser);
+                        offerUser = OfferUserServiceManager.AddOrEditOfferUser(request.BaseUrl/*, request.CreatedBy*/, request.OfferUserRecord, offerUser);
                         request._context.SaveChanges();
 
                         res.Message = HttpStatusCode.OK.ToString();
@@ -135,7 +136,7 @@ namespace Offer.BL.Services
                     var OfferUserExist = request._context.OfferUsers.Any(m => m.Userid == request.OfferUserRecord.Userid && m.Offerid == request.OfferUserRecord.Offerid && !m.Isdeleted);
                     if (!OfferUserExist)
                     {
-                        var offerUser = OfferUserServiceManager.AddOrEditOfferUser(request.BaseUrl, request.CreatedBy, request.OfferUserRecord);
+                        var offerUser = OfferUserServiceManager.AddOrEditOfferUser(request.BaseUrl/*, request.CreatedBy*/, request.OfferUserRecord);
                         request._context.OfferUsers.Add(offerUser);
                         request._context.SaveChanges();
                         res.Message = HttpStatusCode.OK.ToString();

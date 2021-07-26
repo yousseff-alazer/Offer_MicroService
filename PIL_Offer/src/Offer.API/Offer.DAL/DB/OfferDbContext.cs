@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace Offer.DAL.DB
+namespace Offer.API.Offer.DAL.DB
 {
     public partial class OfferDbContext : DbContext
     {
@@ -19,6 +19,15 @@ namespace Offer.DAL.DB
 
         public virtual DbSet<Offer> Offers { get; set; }
         public virtual DbSet<OfferUser> OfferUsers { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseNpgsql("Host=localhost;Database=OfferDb;Username=admin;Password=admin1234");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -52,6 +61,10 @@ namespace Offer.DAL.DB
                     .HasDefaultValueSql("NULL::character varying");
 
                 entity.Property(e => e.Isdeleted).HasColumnName("isdeleted");
+
+                entity.Property(e => e.Languageid)
+                    .HasMaxLength(250)
+                    .HasColumnName("languageid");
 
                 entity.Property(e => e.Maxusagecount).HasColumnName("maxusagecount");
 
@@ -101,7 +114,10 @@ namespace Offer.DAL.DB
 
                 entity.Property(e => e.Offerid).HasColumnName("offerid");
 
-                entity.Property(e => e.Userid).HasColumnName("userid");
+                entity.Property(e => e.Userid)
+                    .IsRequired()
+                    .HasMaxLength(250)
+                    .HasColumnName("userid");
             });
 
             OnModelCreatingPartial(modelBuilder);

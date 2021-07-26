@@ -15,6 +15,6 @@ namespace Offer.CommonDefinitions.Records
         public DateTime? Modificationdate { get; set; }
         public long? Modifiedby { get; set; }
         public long? Offerid { get; set; }
-        public long? Userid { get; set; }
+        public string Userid { get; set; }
     }
 }

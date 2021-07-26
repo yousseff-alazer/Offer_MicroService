@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Offer.DAL.DB
+namespace Offer.API.Offer.DAL.DB
 {
     public partial class OfferUser
     {
@@ -14,6 +14,6 @@ namespace Offer.DAL.DB
         public DateTime? Modificationdate { get; set; }
         public long? Modifiedby { get; set; }
         public long? Offerid { get; set; }
-        public long? Userid { get; set; }
+        public string Userid { get; set; }
     }
 }

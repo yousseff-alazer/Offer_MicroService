@@ -1,4 +1,4 @@
-﻿using Offer.DAL.DB;
+﻿using Offer.API.Offer.DAL.DB;
 
 namespace Offer.CommonDefinitions.Requests
 {
@@ -6,7 +6,7 @@ namespace Offer.CommonDefinitions.Requests
     {
         public OfferDbContext _context;
 
-        public const int DefaultPageSize = 37;
+        public const int DefaultPageSize = 30;
 
         public bool IsDesc { get; set; }
 
@@ -16,12 +16,8 @@ namespace Offer.CommonDefinitions.Requests
 
         public int PageIndex { get; set; }
 
-        public long CreatedBy { get; set; }
+        //public long? CreatedBy { get; set; }
 
-        public long RoleID { get; set; }
-        public long LanguageId { get; set; }
-        public string RoleName { get; set; } //not in all requests
         public string BaseUrl { get; set; }
-        public bool GetMineOnly { get; set; }
     }
 }

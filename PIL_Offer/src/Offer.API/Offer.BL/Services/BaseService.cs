@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 using System.Net;
 using Offer.CommonDefinitions.Requests;
 using Offer.CommonDefinitions.Responses;
-using Offer.DAL.DB;
 using Offer.Helpers;
 using Microsoft.EntityFrameworkCore;
+using Offer.API.Offer.DAL.DB;
 
 namespace Offer.BL.Services
 {

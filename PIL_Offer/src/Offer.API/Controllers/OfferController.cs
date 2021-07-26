@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Offer.API.Offer.DAL.DB;
 using Offer.BL.Services;
+using Offer.CommonDefinitions.Records;
 using Offer.CommonDefinitions.Requests;
-using Offer.DAL.DB;
+using Offer.CommonDefinitions.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,7 @@ namespace Offer.API.Controllers
 
         [HttpPost]
         [Route("GetAll")]
+        [Produces("application/json")]
         public IActionResult GetAll()
         {
             var offerRequest = new OfferRequest
@@ -33,68 +36,165 @@ namespace Offer.API.Controllers
             return Ok(offerResponse);
         }
 
+        /// <summary>
+        /// Return List Of Offers With filter if needed like id,name,...  .
+        /// </summary>
         [HttpPost]
         [Route("GetFiltered")]
+        [Produces("application/json")]
         public IActionResult GetFiltered([FromBody] OfferRequest model)
         {
+            var offerResponse = new OfferResponse();
+            if (model == null)
+            {
+                model = new OfferRequest();
+            }
             model._context = _context;
             model.IsDesc = true;
             model.OrderByColumn = "Id";
-            model.GetMineOnly = true;
 
-            var offerResponse = OfferService.ListOffer(model);
+            offerResponse = OfferService.ListOffer(model);
             return Ok(offerResponse);
         }
 
+        //[HttpPost]
+        //[Route("Add")]
+        //public IActionResult Add([FromForm] OfferRecord model)
+        //{
+        //    var offerResponse = new OfferResponse();
+        //    if (model == null)
+        //    {
+        //        offerResponse.Message = "Empty Body";
+        //        offerResponse.Success = false;
+        //        return Ok(offerResponse);
+        //    }
+        //    var offerReq = new OfferRequest();
+        //    offerReq.OfferRecord = model;
+        //    offerReq._context = _context;
+        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerResponse = OfferService.AddOffer(offerReq);
+        //    return Ok(offerResponse);
+        //}
+
+        //[HttpPost]
+        //[Route("Edit")]
+        //public IActionResult Edit([FromForm] OfferRecord model)
+        //{
+        //    var offerResponse = new OfferResponse();
+        //    if (model == null)
+        //    {
+        //        offerResponse.Message = "Empty Body";
+        //        offerResponse.Success = false;
+        //        return Ok(offerResponse);
+        //    }
+        //    var offerReq = new OfferRequest();
+        //    offerReq.OfferRecord = model;
+        //    offerReq._context = _context;
+        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerResponse = OfferService.EditOffer(offerReq);
+        //    return Ok(offerResponse);
+        //}
+
+        //[HttpPost]
+        //[Route("Delete")]
+        //public IActionResult Delete([FromBody] OfferRecord model)
+        //{
+        //    var offerResponse = new OfferResponse();
+        //    if (model == null)
+        //    {
+        //        offerResponse.Message = "Empty Body";
+        //        offerResponse.Success = false;
+        //        return Ok(offerResponse);
+        //    }
+        //    var offerReq = new OfferRequest();
+        //    offerReq.OfferRecord = model;
+        //    offerReq._context = _context;
+        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerResponse = OfferService.DeleteOffer(offerReq);
+        //    return Ok(offerResponse);
+        //}
+
+        /// <summary>
+        /// Creates Offer, Uncheck Send empty value in Id,Creationdate,Isdeleted,IsDesc,PageSize,PageIndex.
+        /// </summary>
         [HttpPost]
         [Route("Add")]
-        public IActionResult Add([FromBody] OfferRequest model)
+        [Produces("application/json")]
+        public IActionResult Add([FromForm] OfferRequest model)
         {
+            var offerResponse = new OfferResponse();
             if (model == null)
             {
-                model = new OfferRequest();
+                offerResponse.Message = "Empty Body";
+                offerResponse.Success = false;
+                return Ok(offerResponse);
             }
+
             model._context = _context;
-            var offerResponse = OfferService.AddOffer(model);
+            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+            offerResponse = OfferService.AddOffer(model);
             return Ok(offerResponse);
         }
 
+        /// <summary>
+        /// Update Offer , Uncheck Send empty value in Id,Creationdate,Isdeleted,IsDesc,PageSize,PageIndex.
+        /// </summary>
         [HttpPost]
         [Route("Edit")]
-        public IActionResult Edit([FromBody] OfferRequest model)
+        [Produces("application/json")]
+        public IActionResult Edit([FromForm] OfferRequest model)
         {
+            var offerResponse = new OfferResponse();
             if (model == null)
             {
-                model = new OfferRequest();
+                offerResponse.Message = "Empty Body";
+                offerResponse.Success = false;
+                return Ok(offerResponse);
             }
             model._context = _context;
-            var offerResponse = OfferService.EditOffer(model);
+            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+            offerResponse = OfferService.EditOffer(model);
             return Ok(offerResponse);
         }
 
+        /// <summary>
+        /// Remove Offer .
+        /// </summary>
         [HttpPost]
         [Route("Delete")]
+        [Produces("application/json")]
         public IActionResult Delete([FromBody] OfferRequest model)
         {
+            var offerResponse = new OfferResponse();
             if (model == null)
             {
-                model = new OfferRequest();
+                offerResponse.Message = "Empty Body";
+                offerResponse.Success = false;
+                return Ok(offerResponse);
             }
             model._context = _context;
-            var offerResponse = OfferService.DeleteOffer(model);
+            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+            offerResponse = OfferService.DeleteOffer(model);
             return Ok(offerResponse);
         }
 
+        /// <summary>
+        /// Use Offer By User For One Time.
+        /// </summary>
         [HttpPost]
         [Route("Redeem")]
+        [Produces("application/json")]
         public IActionResult Redeem([FromBody] OfferUserRequest model)
         {
-            if (model == null)
+            var offerResponse = new OfferUserResponse();
+            if (model == null || (model != null && (model.OfferUserRecord.Offerid == null || !string.IsNullOrWhiteSpace(model.OfferUserRecord.Userid))))
             {
-                model = new OfferUserRequest();
+                offerResponse.Message = "Wrong Body";
+                offerResponse.Success = false;
+                return Ok(offerResponse);
             }
             model._context = _context;
-            var offerResponse = OfferUserService.AddOfferUser(model);
+            offerResponse = OfferUserService.AddOfferUser(model);
             return Ok(offerResponse);
         }
     }

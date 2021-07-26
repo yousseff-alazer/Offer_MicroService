@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace Offer.DAL.DB
+namespace Offer.API.Offer.DAL.DB
 {
     public partial class Offer
     {
@@ -23,5 +23,6 @@ namespace Offer.DAL.DB
         public string Imageurl { get; set; }
         public long? Maxusagecount { get; set; }
         public long? Usedcount { get; set; }
+        public string Languageid { get; set; }
     }
 }

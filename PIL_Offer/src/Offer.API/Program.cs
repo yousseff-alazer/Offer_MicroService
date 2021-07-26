@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace Offer.API
 {
+#pragma warning disable CS1591
+
     public class Program
     {
         public static void Main(string[] args)
@@ -22,5 +24,7 @@ namespace Offer.API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+#pragma warning restore CS1591
     }
 }

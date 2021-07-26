@@ -1,4 +1,4 @@
-﻿using Offer.DAL.DB;
+﻿using Offer.API.Offer.DAL.DB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,41 +7,35 @@ using System.Threading.Tasks;
 using Offer.CommonDefinitions.Records;
 using System.IO;
 
+using Offer.API.Offer.DAL.DB;
+
 namespace Offer.BL.Services.Managers
 {
     public class OfferUserServiceManager
     {
         private const string OfferUserPath = "{0}/ContentFiles/OfferUser/{1}";
 
-        public static OfferUser AddOrEditOfferUser(string baseUrl, long createdBy, OfferUserRecord record, OfferUser oldOfferUser = null)
+        public static OfferUser AddOrEditOfferUser(string baseUrl/*, long createdBy*/, OfferUserRecord record, OfferUser oldOfferUser = null)
         {
             if (oldOfferUser == null)//new offerUser
             {
                 oldOfferUser = new OfferUser();
                 oldOfferUser.Creationdate = DateTime.Now;
-                oldOfferUser.Createdby = createdBy;
+                //oldOfferUser.Createdby = createdBy;
             }
             else
             {
                 oldOfferUser.Modificationdate = DateTime.Now;
-                oldOfferUser.Modifiedby = createdBy;
+                //oldOfferUser.Modifiedby = createdBy;
             }
-
-            //upload
-            //var file = record.ApkFile;
-            //if (file != null && file.Length > 0)
-            //{
-            //    var fileName = Guid.NewGuid().ToString() + "-" + file.FileName;
-            //    var physicalPath = string.Format(OfferUserPath, Directory.GetCurrentDirectory() + "/wwwroot", fileName);
-            //    var virtualPath = string.Format(OfferUserPath, baseUrl, fileName);
-
-            //    using (var stream = new FileStream(physicalPath, FileMode.Create))
-            //    {
-            //        file.CopyTo(stream);
-            //    }
-            //    oldOfferUser.ApkFileUrl = virtualPath;
-            //}
-
+            if (record.Offerid != null)
+            {
+                oldOfferUser.Offerid = record.Offerid;
+            }
+            if (!string.IsNullOrWhiteSpace(record.Userid))
+            {
+                oldOfferUser.Userid = record.Userid;
+            }
             return oldOfferUser;
         }
 
