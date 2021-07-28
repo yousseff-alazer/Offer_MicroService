@@ -24,7 +24,7 @@ namespace Offer.API.Offer.DAL.DB
         {
             if (!optionsBuilder.IsConfigured)
             {
-                // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 optionsBuilder.UseNpgsql("Host=localhost;Database=OfferDb;Username=admin;Password=admin1234");
             }
         }
@@ -39,7 +39,9 @@ namespace Offer.API.Offer.DAL.DB
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Createdby).HasColumnName("createdby");
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(250)
+                    .HasColumnName("created_by");
 
                 entity.Property(e => e.Creationdate)
                     .HasColumnName("creationdate")
@@ -62,19 +64,36 @@ namespace Offer.API.Offer.DAL.DB
 
                 entity.Property(e => e.Isdeleted).HasColumnName("isdeleted");
 
-                entity.Property(e => e.Languageid)
-                    .HasMaxLength(250)
-                    .HasColumnName("languageid");
+                entity.Property(e => e.LanguageId).HasColumnName("language_id");
 
-                entity.Property(e => e.Maxusagecount).HasColumnName("maxusagecount");
+                entity.Property(e => e.Maxusagecount)
+                    .HasColumnName("maxusagecount")
+                    .HasDefaultValueSql("1");
 
                 entity.Property(e => e.Modificationdate).HasColumnName("modificationdate");
 
-                entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(250)
+                    .HasColumnName("modified_by");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(250)
                     .HasColumnName("name")
+                    .HasDefaultValueSql("NULL::character varying");
+
+                entity.Property(e => e.ObjectId)
+                    .HasMaxLength(250)
+                    .HasColumnName("object_id")
+                    .HasDefaultValueSql("NULL::character varying");
+
+                entity.Property(e => e.ObjectTypeId)
+                    .HasMaxLength(250)
+                    .HasColumnName("object_type_id")
+                    .HasDefaultValueSql("NULL::character varying");
+
+                entity.Property(e => e.ObjectUrl)
+                    .HasMaxLength(250)
+                    .HasColumnName("object_url")
                     .HasDefaultValueSql("NULL::character varying");
 
                 entity.Property(e => e.Purpose)
@@ -87,7 +106,9 @@ namespace Offer.API.Offer.DAL.DB
                     .HasColumnName("status")
                     .HasDefaultValueSql("true");
 
-                entity.Property(e => e.Usedcount).HasColumnName("usedcount");
+                entity.Property(e => e.Usedcount)
+                    .HasColumnName("usedcount")
+                    .HasDefaultValueSql("0");
 
                 entity.Property(e => e.Validfrom).HasColumnName("validfrom");
 
@@ -100,7 +121,9 @@ namespace Offer.API.Offer.DAL.DB
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Createdby).HasColumnName("createdby");
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(250)
+                    .HasColumnName("created_by");
 
                 entity.Property(e => e.Creationdate)
                     .HasColumnName("creationdate")
@@ -110,14 +133,16 @@ namespace Offer.API.Offer.DAL.DB
 
                 entity.Property(e => e.Modificationdate).HasColumnName("modificationdate");
 
-                entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(250)
+                    .HasColumnName("modified_by");
 
                 entity.Property(e => e.Offerid).HasColumnName("offerid");
 
-                entity.Property(e => e.Userid)
+                entity.Property(e => e.UserId)
                     .IsRequired()
                     .HasMaxLength(250)
-                    .HasColumnName("userid");
+                    .HasColumnName("user_id");
             });
 
             OnModelCreatingPartial(modelBuilder);

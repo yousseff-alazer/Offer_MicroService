@@ -19,12 +19,12 @@ namespace Offer.BL.Services.Managers
             {
                 oldOffer = new API.Offer.DAL.DB.Offer();
                 oldOffer.Creationdate = DateTime.Now;
-                //oldOffer.Createdby = createdBy;
+                oldOffer.CreatedBy = record.CreatedBy;
             }
             else
             {
                 oldOffer.Modificationdate = DateTime.Now;
-                //oldOffer.Modifiedby = createdBy;
+                oldOffer.ModifiedBy = record.ModifiedBy;
             }
             if (!string.IsNullOrWhiteSpace(record.Name))
             {
@@ -54,17 +54,17 @@ namespace Offer.BL.Services.Managers
             {
                 oldOffer.Purpose = record.Purpose;
             }
-            if (!string.IsNullOrWhiteSpace(record.LanguageId))
+            if (record.LanguageId != null)
             {
-                oldOffer.Languageid = record.LanguageId;
+                oldOffer.LanguageId = record.LanguageId;
             }
             if (record.Maxusagecount != null)
             {
                 oldOffer.Maxusagecount = record.Maxusagecount;
             }
-            if (record.Usedcount != null)
+            if (record.AddUse != null && record.AddUse == true)
             {
-                oldOffer.Usedcount = record.Usedcount;
+                oldOffer.Usedcount = oldOffer.Usedcount + 1;
             }
             //    Imageurl = c.Imageurl
             //upload
@@ -98,6 +98,13 @@ namespace Offer.BL.Services.Managers
         {
             if (offerRecord.Id > 0)
                 query = query.Where(c => c.Id == offerRecord.Id);
+            if (offerRecord.Valid != null && offerRecord.Valid.Value == true)
+                query = query.Where(c => c.Validfrom != null && c.Validfrom.Value.Date <= DateTime.UtcNow.Date
+                && c.Validto != null && c.Validto.Value.Date >= DateTime.UtcNow.Date && c.Status != null && c.Status.Value == true
+                && c.Usedcount <= c.Maxusagecount);
+
+            if (!string.IsNullOrWhiteSpace(offerRecord.ObjectTypeId))
+                query = query.Where(c => c.ObjectTypeId != null && c.ObjectTypeId.Trim().Contains(offerRecord.ObjectTypeId.Trim()));
 
             return query;
         }

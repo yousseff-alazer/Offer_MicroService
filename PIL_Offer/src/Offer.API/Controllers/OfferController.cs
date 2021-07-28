@@ -23,7 +23,7 @@ namespace Offer.API.Controllers
             _context = context;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetAll")]
         [Produces("application/json")]
         public IActionResult GetAll()
@@ -37,7 +37,27 @@ namespace Offer.API.Controllers
         }
 
         /// <summary>
-        /// Return List Of Offers With filter if needed like id,name,...  .
+        /// Return Offer With id .
+        /// </summary>
+        [HttpGet("{id}", Name = "GetOffer")]
+        [Produces("application/json")]
+        public IActionResult GetOffer(int id)
+        {
+            var offerRequest = new OfferRequest
+            {
+                _context = _context,
+                OfferRecord = new OfferRecord
+                {
+                    Id = id,
+                    //Valid = true
+                }
+            };
+            var offerResponse = OfferService.ListOffer(offerRequest);
+            return Ok(offerResponse);
+        }
+
+        /// <summary>
+        /// Return List Of Offers With filter valid and any  needed filter like id,name,...  .
         /// </summary>
         [HttpPost]
         [Route("GetFiltered")]
@@ -50,10 +70,31 @@ namespace Offer.API.Controllers
                 model = new OfferRequest();
             }
             model._context = _context;
-            model.IsDesc = true;
-            model.OrderByColumn = "Id";
+            //model.IsDesc = true;
+            //model.OrderByColumn = "Id";
 
             offerResponse = OfferService.ListOffer(model);
+            if (offerResponse.Success && offerResponse.OfferRecords.Count > 0 && model.OfferRecord != null
+                && !string.IsNullOrWhiteSpace(model.OfferRecord.CreatedBy))
+            {
+                var offerIds = offerResponse.OfferRecords.Select(c => c.Id).ToList();
+                var offerUserReq = new OfferUserRequest()
+                {
+                    _context = _context,
+                    OfferUserRecord = new OfferUserRecord()
+                    {
+                        OfferIds = offerIds,
+                        CreatedBy = model.OfferRecord.CreatedBy
+                    }
+                };
+                var offerUserResponse = OfferUserService.ListOfferUser(offerUserReq);
+                if (offerUserResponse.Success && offerUserResponse.OfferUserRecords.Count > 0)
+                {
+                    var usedOfferIds = offerUserResponse.OfferUserRecords.Where(c => c.Offerid != null).Select(c => c.Offerid).ToList();
+                    offerResponse.OfferRecords = offerResponse.OfferRecords.Where(c => !usedOfferIds.Contains(c.Id)).ToList();
+                }
+            }
+
             return Ok(offerResponse);
         }
 
@@ -178,23 +219,63 @@ namespace Offer.API.Controllers
             return Ok(offerResponse);
         }
 
+        ///// <summary>
+        ///// Use Offer By User.
+        ///// </summary>
+        //[HttpPost]
+        //[Route("Redeem")]
+        //[Produces("application/json")]
+        //public IActionResult Redeem([FromBody] OfferUserRequest model)
+        //{
+        //    var offerResponse = new OfferUserResponse();
+        //    if (model == null || (model != null && (model.OfferUserRecord.Offerid == null || !string.IsNullOrWhiteSpace(model.OfferUserRecord.UserId))))
+        //    {
+        //        offerResponse.Message = "Wrong Body";
+        //        offerResponse.Success = false;
+        //        return Ok(offerResponse);
+        //    }
+        //    model._context = _context;
+        //    offerResponse = OfferUserService.AddOfferUser(model);
+        //    return Ok(offerResponse);
+        //}
+
         /// <summary>
-        /// Use Offer By User For One Time.
+        /// Use Offer.
         /// </summary>
-        [HttpPost]
-        [Route("Redeem")]
+        [HttpGet("{offerid}/{userid}", Name = "UseOffer")]
         [Produces("application/json")]
-        public IActionResult Redeem([FromBody] OfferUserRequest model)
+        public IActionResult UseOffer(int offerid, string userid)
         {
             var offerResponse = new OfferUserResponse();
-            if (model == null || (model != null && (model.OfferUserRecord.Offerid == null || !string.IsNullOrWhiteSpace(model.OfferUserRecord.Userid))))
+            if (offerid == 0 || !string.IsNullOrWhiteSpace(userid))
             {
-                offerResponse.Message = "Wrong Body";
+                offerResponse.Message = "Wrong Input";
                 offerResponse.Success = false;
                 return Ok(offerResponse);
             }
-            model._context = _context;
-            offerResponse = OfferUserService.AddOfferUser(model);
+            var offerUserReq = new OfferUserRequest()
+            {
+                _context = _context,
+                OfferUserRecord = new OfferUserRecord()
+                {
+                    UserId = userid,
+                    Offerid = offerid
+                }
+            };
+            offerResponse = OfferUserService.AddOfferUser(offerUserReq);
+            if (offerResponse.Success)
+            {
+                var offerEditReq = new OfferRequest()
+                {
+                    _context = _context,
+                    OfferRecord = new OfferRecord()
+                    {
+                        Id = offerid,
+                        AddUse = true
+                    }
+                };
+                OfferService.EditOffer(offerEditReq);
+            }
             return Ok(offerResponse);
         }
     }

@@ -348,3 +348,4 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/PIL_Offer/src/Offer.API/wwwroot/ContentFiles/Offer/f0faa5d1-f8f4-432d-b788-6d2f6fd0d152-sync-vs-async-patterns-across-microservices.png

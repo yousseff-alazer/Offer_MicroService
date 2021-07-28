@@ -15,26 +15,26 @@ namespace Offer.BL.Services.Managers
     {
         private const string OfferUserPath = "{0}/ContentFiles/OfferUser/{1}";
 
-        public static OfferUser AddOrEditOfferUser(string baseUrl/*, long createdBy*/, OfferUserRecord record, OfferUser oldOfferUser = null)
+        public static OfferUser AddOrEditOfferUser(string baseUrl, OfferUserRecord record, OfferUser oldOfferUser = null)
         {
             if (oldOfferUser == null)//new offerUser
             {
                 oldOfferUser = new OfferUser();
                 oldOfferUser.Creationdate = DateTime.Now;
-                //oldOfferUser.Createdby = createdBy;
+                oldOfferUser.CreatedBy = record.CreatedBy;
             }
             else
             {
                 oldOfferUser.Modificationdate = DateTime.Now;
-                //oldOfferUser.Modifiedby = createdBy;
+                oldOfferUser.ModifiedBy = record.ModifiedBy;
             }
             if (record.Offerid != null)
             {
                 oldOfferUser.Offerid = record.Offerid;
             }
-            if (!string.IsNullOrWhiteSpace(record.Userid))
+            if (!string.IsNullOrWhiteSpace(record.UserId))
             {
-                oldOfferUser.Userid = record.Userid;
+                oldOfferUser.UserId = record.UserId;
             }
             return oldOfferUser;
         }
@@ -43,6 +43,8 @@ namespace Offer.BL.Services.Managers
         {
             if (offerUserRecord.Id > 0)
                 query = query.Where(c => c.Id == offerUserRecord.Id);
+            if (offerUserRecord.OfferIds.Count > 0)
+                query = query.Where(c => offerUserRecord.OfferIds.Contains(c.Id));
 
             return query;
         }

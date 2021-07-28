@@ -23,21 +23,24 @@ namespace Offer.BL.Services
                      var query = request._context.Offers.Where(c => !c.Isdeleted).Select(c => new OfferRecord
                      {
                          Id = c.Id,
-                         Createdby = c.Createdby,
+                         CreatedBy = c.CreatedBy,
                          Creationdate = c.Creationdate,
                          Name = c.Name,
                          Description = c.Description,
                          Validfrom = c.Validfrom,
                          Validto = c.Validto,
                          Modificationdate = c.Modificationdate,
-                         Modifiedby = c.Modifiedby,
+                         ModifiedBy = c.ModifiedBy,
                          Discount = c.Discount,
                          Status = c.Status,
                          Purpose = c.Purpose,
                          Imageurl = c.Imageurl,
                          Maxusagecount = c.Maxusagecount,
                          Usedcount = c.Usedcount,
-                         LanguageId = c.Languageid
+                         LanguageId = c.LanguageId,
+                         ObjectTypeId = c.ObjectTypeId,
+                         ObjectId = c.ObjectId,
+                         ObjectUrl = c.ObjectUrl
                      });
 
                      if (request.OfferRecord != null)
@@ -115,7 +118,7 @@ namespace Offer.BL.Services
                     if (offer != null)
                     {
                         //update whole offer
-                        offer = OfferServiceManager.AddOrEditOffer(request.BaseUrl/*, request.CreatedBy*/, request.OfferRecord, offer);
+                        offer = OfferServiceManager.AddOrEditOffer(request.BaseUrl, request.OfferRecord, offer);
                         request._context.SaveChanges();
 
                         res.Message = HttpStatusCode.OK.ToString();
@@ -149,7 +152,7 @@ namespace Offer.BL.Services
                     var OfferExist = request._context.Offers.Any(m => m.Name.ToLower() == request.OfferRecord.Name.ToLower() && !m.Isdeleted);
                     if (!OfferExist)
                     {
-                        var offer = OfferServiceManager.AddOrEditOffer(request.BaseUrl/*, request.CreatedBy*/, request.OfferRecord);
+                        var offer = OfferServiceManager.AddOrEditOffer(request.BaseUrl, request.OfferRecord);
                         request._context.Offers.Add(offer);
                         request._context.SaveChanges();
                         res.Message = HttpStatusCode.OK.ToString();

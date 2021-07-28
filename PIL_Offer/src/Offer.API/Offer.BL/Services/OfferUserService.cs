@@ -24,7 +24,7 @@ namespace Offer.BL.Services
                      {
                          Id = c.Id,
                          Offerid = c.Offerid,
-                         Userid = c.Userid
+                         UserId = c.UserId
                      });
 
                      if (request.OfferUserRecord != null)
@@ -133,7 +133,7 @@ namespace Offer.BL.Services
             {
                 try
                 {
-                    var OfferUserExist = request._context.OfferUsers.Any(m => m.Userid == request.OfferUserRecord.Userid && m.Offerid == request.OfferUserRecord.Offerid && !m.Isdeleted);
+                    var OfferUserExist = request._context.OfferUsers.Any(m => m.UserId == request.OfferUserRecord.UserId && m.Offerid == request.OfferUserRecord.Offerid && !m.Isdeleted);
                     if (!OfferUserExist)
                     {
                         var offerUser = OfferUserServiceManager.AddOrEditOfferUser(request.BaseUrl/*, request.CreatedBy*/, request.OfferUserRecord);
