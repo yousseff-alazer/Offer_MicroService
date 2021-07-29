@@ -36,7 +36,7 @@ services:
   offer.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "DatabaseSettings:ConnectionString=Server=offerdb;Port=5432;Database=OfferDb;User Id=admin;Password=admin1234;"
+      - "DatabaseSettings:ConnectionString=Port=5432;Database=OfferDb;User Id=admin;Password=admin1234;"
     depends_on:
       - offerdb
     ports:

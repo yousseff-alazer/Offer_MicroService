@@ -5,6 +5,7 @@ using Offer.BL.Services;
 using Offer.CommonDefinitions.Records;
 using Offer.CommonDefinitions.Requests;
 using Offer.CommonDefinitions.Responses;
+using Offer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,11 +29,21 @@ namespace Offer.API.Controllers
         [Produces("application/json")]
         public IActionResult GetAll()
         {
-            var offerRequest = new OfferRequest
+            var offerResponse = new OfferResponse();
+            try
             {
-                _context = _context
-            };
-            var offerResponse = OfferService.ListOffer(offerRequest);
+                var offerRequest = new OfferRequest
+                {
+                    _context = _context
+                };
+                offerResponse = OfferService.ListOffer(offerRequest);
+            }
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
             return Ok(offerResponse);
         }
 
@@ -43,16 +54,26 @@ namespace Offer.API.Controllers
         [Produces("application/json")]
         public IActionResult GetOffer(int id)
         {
-            var offerRequest = new OfferRequest
+            var offerResponse = new OfferResponse();
+            try
             {
-                _context = _context,
-                OfferRecord = new OfferRecord
+                var offerRequest = new OfferRequest
                 {
-                    Id = id,
-                    //Valid = true
-                }
-            };
-            var offerResponse = OfferService.ListOffer(offerRequest);
+                    _context = _context,
+                    OfferRecord = new OfferRecord
+                    {
+                        Id = id,
+                        //Valid = true
+                    }
+                };
+                offerResponse = OfferService.ListOffer(offerRequest);
+            }
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
             return Ok(offerResponse);
         }
 
@@ -65,34 +86,43 @@ namespace Offer.API.Controllers
         public IActionResult GetFiltered([FromBody] OfferRequest model)
         {
             var offerResponse = new OfferResponse();
-            if (model == null)
+            try
             {
-                model = new OfferRequest();
-            }
-            model._context = _context;
-            //model.IsDesc = true;
-            //model.OrderByColumn = "Id";
-
-            offerResponse = OfferService.ListOffer(model);
-            if (offerResponse.Success && offerResponse.OfferRecords.Count > 0 && model.OfferRecord != null
-                && !string.IsNullOrWhiteSpace(model.OfferRecord.CreatedBy))
-            {
-                var offerIds = offerResponse.OfferRecords.Select(c => c.Id).ToList();
-                var offerUserReq = new OfferUserRequest()
+                if (model == null)
                 {
-                    _context = _context,
-                    OfferUserRecord = new OfferUserRecord()
-                    {
-                        OfferIds = offerIds,
-                        CreatedBy = model.OfferRecord.CreatedBy
-                    }
-                };
-                var offerUserResponse = OfferUserService.ListOfferUser(offerUserReq);
-                if (offerUserResponse.Success && offerUserResponse.OfferUserRecords.Count > 0)
-                {
-                    var usedOfferIds = offerUserResponse.OfferUserRecords.Where(c => c.Offerid != null).Select(c => c.Offerid).ToList();
-                    offerResponse.OfferRecords = offerResponse.OfferRecords.Where(c => !usedOfferIds.Contains(c.Id)).ToList();
+                    model = new OfferRequest();
                 }
+                model._context = _context;
+                //model.IsDesc = true;
+                //model.OrderByColumn = "Id";
+
+                offerResponse = OfferService.ListOffer(model);
+                if (offerResponse.Success && offerResponse.OfferRecords.Count > 0 && model.OfferRecord != null
+                    && !string.IsNullOrWhiteSpace(model.OfferRecord.CreatedBy))
+                {
+                    var offerIds = offerResponse.OfferRecords.Select(c => c.Id).ToList();
+                    var offerUserReq = new OfferUserRequest()
+                    {
+                        _context = _context,
+                        OfferUserRecord = new OfferUserRecord()
+                        {
+                            OfferIds = offerIds,
+                            CreatedBy = model.OfferRecord.CreatedBy
+                        }
+                    };
+                    var offerUserResponse = OfferUserService.ListOfferUser(offerUserReq);
+                    if (offerUserResponse.Success && offerUserResponse.OfferUserRecords.Count > 0)
+                    {
+                        var usedOfferIds = offerUserResponse.OfferUserRecords.Where(c => c.Offerid != null).Select(c => c.Offerid).ToList();
+                        offerResponse.OfferRecords = offerResponse.OfferRecords.Where(c => !usedOfferIds.Contains(c.Id)).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
             }
 
             return Ok(offerResponse);
@@ -164,16 +194,26 @@ namespace Offer.API.Controllers
         public IActionResult Add([FromForm] OfferRequest model)
         {
             var offerResponse = new OfferResponse();
-            if (model == null)
+            try
             {
-                offerResponse.Message = "Empty Body";
+                if (model == null)
+                {
+                    offerResponse.Message = "Empty Body";
+                    offerResponse.Success = false;
+                    return Ok(offerResponse);
+                }
+
+                model._context = _context;
+                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerResponse = OfferService.AddOffer(model);
+            }
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
                 offerResponse.Success = false;
-                return Ok(offerResponse);
+                LogHelper.LogException(ex.Message, ex.StackTrace);
             }
 
-            model._context = _context;
-            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
-            offerResponse = OfferService.AddOffer(model);
             return Ok(offerResponse);
         }
 
@@ -186,15 +226,24 @@ namespace Offer.API.Controllers
         public IActionResult Edit([FromForm] OfferRequest model)
         {
             var offerResponse = new OfferResponse();
-            if (model == null)
+            try
             {
-                offerResponse.Message = "Empty Body";
-                offerResponse.Success = false;
-                return Ok(offerResponse);
+                if (model == null)
+                {
+                    offerResponse.Message = "Empty Body";
+                    offerResponse.Success = false;
+                    return Ok(offerResponse);
+                }
+                model._context = _context;
+                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerResponse = OfferService.EditOffer(model);
             }
-            model._context = _context;
-            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
-            offerResponse = OfferService.EditOffer(model);
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
             return Ok(offerResponse);
         }
 
@@ -207,15 +256,25 @@ namespace Offer.API.Controllers
         public IActionResult Delete([FromBody] OfferRequest model)
         {
             var offerResponse = new OfferResponse();
-            if (model == null)
+            try
             {
-                offerResponse.Message = "Empty Body";
-                offerResponse.Success = false;
-                return Ok(offerResponse);
+                if (model == null)
+                {
+                    offerResponse.Message = "Empty Body";
+                    offerResponse.Success = false;
+                    return Ok(offerResponse);
+                }
+                model._context = _context;
+                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerResponse = OfferService.DeleteOffer(model);
             }
-            model._context = _context;
-            model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
-            offerResponse = OfferService.DeleteOffer(model);
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
             return Ok(offerResponse);
         }
 
@@ -247,36 +306,59 @@ namespace Offer.API.Controllers
         public IActionResult UseOffer(int offerid, string userid)
         {
             var offerResponse = new OfferUserResponse();
-            if (offerid == 0 || !string.IsNullOrWhiteSpace(userid))
+            try
             {
-                offerResponse.Message = "Wrong Input";
-                offerResponse.Success = false;
-                return Ok(offerResponse);
-            }
-            var offerUserReq = new OfferUserRequest()
-            {
-                _context = _context,
-                OfferUserRecord = new OfferUserRecord()
+                if (offerid == 0 || !string.IsNullOrWhiteSpace(userid))
                 {
-                    UserId = userid,
-                    Offerid = offerid
+                    offerResponse.Message = "Wrong Input";
+                    offerResponse.Success = false;
+                    return Ok(offerResponse);
                 }
-            };
-            offerResponse = OfferUserService.AddOfferUser(offerUserReq);
-            if (offerResponse.Success)
-            {
-                var offerEditReq = new OfferRequest()
+                var offerUserReq = new OfferUserRequest()
                 {
                     _context = _context,
-                    OfferRecord = new OfferRecord()
+                    OfferUserRecord = new OfferUserRecord()
                     {
-                        Id = offerid,
-                        AddUse = true
+                        UserId = userid,
+                        Offerid = offerid
                     }
                 };
-                OfferService.EditOffer(offerEditReq);
+                offerResponse = OfferUserService.AddOfferUser(offerUserReq);
+                if (offerResponse.Success)
+                {
+                    var offerEditReq = new OfferRequest()
+                    {
+                        _context = _context,
+                        OfferRecord = new OfferRecord()
+                        {
+                            Id = offerid,
+                            AddUse = true
+                        }
+                    };
+                    OfferService.EditOffer(offerEditReq);
+                }
+            }
+            catch (Exception ex)
+            {
+                offerResponse.Message = ex.Message;
+                offerResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
             }
             return Ok(offerResponse);
         }
+
+        //[HttpGet]
+        //[Route("CreateCoupon")]
+        //[Produces("application/json")]
+        //public IActionResult CreateCoupon()
+        //{
+        //    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        //    var random = new Random();
+        //    var result = new string(
+        //        Enumerable.Repeat(chars, 20)
+        //                  .Select(s => s[random.Next(s.Length)])
+        //                  .ToArray());
+        //    return Ok(result);
+        //}
     }
 }

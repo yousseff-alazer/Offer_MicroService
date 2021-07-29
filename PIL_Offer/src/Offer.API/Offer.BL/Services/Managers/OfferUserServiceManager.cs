@@ -26,7 +26,7 @@ namespace Offer.BL.Services.Managers
             else
             {
                 oldOfferUser.Modificationdate = DateTime.Now;
-                oldOfferUser.ModifiedBy = record.ModifiedBy;
+                oldOfferUser.ModifiedBy = record.CreatedBy;
             }
             if (record.Offerid != null)
             {

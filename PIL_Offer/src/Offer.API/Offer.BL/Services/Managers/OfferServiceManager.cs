@@ -24,7 +24,7 @@ namespace Offer.BL.Services.Managers
             else
             {
                 oldOffer.Modificationdate = DateTime.Now;
-                oldOffer.ModifiedBy = record.ModifiedBy;
+                oldOffer.ModifiedBy = record.CreatedBy;
             }
             if (!string.IsNullOrWhiteSpace(record.Name))
             {
