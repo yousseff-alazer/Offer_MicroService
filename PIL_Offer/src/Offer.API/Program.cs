@@ -30,7 +30,7 @@ namespace Offer.API
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+    }
 
 #pragma warning restore CS1591
-    }
 }

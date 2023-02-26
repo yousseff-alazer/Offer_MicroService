@@ -25,8 +25,8 @@ namespace Offer.BL.Services
                          Id = c.Id,
                          CreatedBy = c.CreatedBy,
                          Creationdate = c.Creationdate,
-                         Name = c.Name,
-                         Description = c.Description,
+                         Name =  c.Name,
+                         Description =  c.Description,
                          Validfrom = c.Validfrom,
                          Validto = c.Validto,
                          Modificationdate = c.Modificationdate,
@@ -40,7 +40,18 @@ namespace Offer.BL.Services
                          LanguageId = c.LanguageId,
                          ObjectTypeId = c.ObjectTypeId,
                          ObjectId = c.ObjectId,
-                         ObjectUrl = c.ObjectUrl
+                         ObjectUrl = c.ObjectUrl,
+                         ActionTypeId = c.ActionTypeId,
+                         MaxValue = c.MaxValue,
+                         MinValue = c.MinValue,
+                         ConstantType = c.ConstantType,
+                         ActionType=c.ActionType,
+                         Translates = !string.IsNullOrWhiteSpace(request.LanguageId) &&
+                                         c.OfferTranslates != null
+                                ? c.OfferTranslates.Where(t => t.LanguageId == request.LanguageId)
+                                : null,
+                         OfferTypeId=c.OfferTypeId,
+                         OfferType=c.OfferType!=null?c.OfferType.Name:""
                      });
 
                      if (request.OfferRecord != null)
@@ -49,9 +60,7 @@ namespace Offer.BL.Services
                      res.TotalCount = query.Count();
 
                      query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
-
-                     if (request.PageSize > 0)
-                         query = ApplyPaging(query, request.PageSize, request.PageIndex);
+                     query = request.PageSize > 0 ? ApplyPaging(query, request.PageSize, request.PageIndex) : ApplyPaging(query, request.DefaultPageSize, 0);
 
                      res.OfferRecords = query.ToList();
                      res.Message = HttpStatusCode.OK.ToString();
@@ -167,9 +176,9 @@ namespace Offer.BL.Services
                 }
                 catch (Exception ex)
                 {
-                    res.Message = ex.Message;
+                    res.Message = ex.Message + " " + ex.StackTrace + " " + ex.InnerException +ex.Data;
                     res.Success = false;
-                    LogHelper.LogException(ex.Message, ex.StackTrace);
+                    LogHelper.LogException(ex.Message + ex.InnerException, ex.StackTrace);
                 }
                 return res;
             });

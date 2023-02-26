@@ -6,7 +6,7 @@ namespace Offer.CommonDefinitions.Requests
     {
         public OfferDbContext _context;
 
-        public const int DefaultPageSize = 30;
+        public int DefaultPageSize = 80;
 
         public bool IsDesc { get; set; }
 

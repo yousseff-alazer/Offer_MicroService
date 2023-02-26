@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Offer.CommonDefinitions.Requests
 {
-    public class OfferRequest : BaseRequest
+    public class OfferTypeRequest : BaseRequest
     {
-        public OfferRecord OfferRecord { get; set; }
-        public string LanguageId { get; set; }
+        public OfferTypeRecord OfferTypeRecord { get; set; }
     }
 }

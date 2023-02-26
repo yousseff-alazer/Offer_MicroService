@@ -1,0 +1,172 @@
+
+
+
+CREATE TABLE Offer (
+  ID SERIAL PRIMARY KEY         NOT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  Name varchar(250) DEFAULT NULL,
+  Description varchar(250) DEFAULT NULL,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  ValidFrom timestamp DEFAULT NULL,
+  ValidTo timestamp DEFAULT NULL,
+  ModificationDate timestamp DEFAULT NULL,
+  Discount varchar(250) DEFAULT NULL,
+  Status BOOL NOT NULL  DEFAULT 't',
+  Purpose varchar(250) DEFAULT NULL,
+  ImageUrl varchar(250) DEFAULT NULL
+);
+CREATE TABLE Offer_User (
+  ID SERIAL PRIMARY KEY  NOT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  ModificationDate timestamp DEFAULT NULL,
+  OfferId bigint DEFAULT NULL
+);
+ALTER TABLE Offer
+ADD COLUMN Modified_By varchar(250) NULL;
+ALTER TABLE Offer
+ADD COLUMN Created_By varchar(250) NULL;
+
+ALTER TABLE Offer_user
+ADD COLUMN Modified_By varchar(250) NULL;
+ALTER TABLE Offer_user
+ADD COLUMN Created_By varchar(250) NULL;
+
+ALTER TABLE Offer
+ADD COLUMN Language_Id bigint DEFAULT NULL;
+
+ALTER TABLE Offer_User 
+ADD COLUMN user_Id varchar(250) NOT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN Object_Type_Id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN Object_Id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN  UsedCount bigint DEFAULT 0;
+
+ALTER TABLE Offer
+ADD COLUMN Object_Url varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN  MaxUsageCount bigint DEFAULT 1;
+
+ALTER TABLE Offer
+ADD COLUMN min_value varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN max_value varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN action_type_id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer
+ADD COLUMN constant_type varchar(250) DEFAULT NULL;
+
+CREATE TABLE Offer_Translate (
+  ID SERIAL PRIMARY KEY         NOT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  Name varchar(250) DEFAULT NULL,
+  Description varchar(250) DEFAULT NULL,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  ModificationDate timestamp DEFAULT NULL,
+  Purpose varchar(250) DEFAULT NULL,
+  Modified_By varchar(250) NULL,
+  Created_By varchar(250) NULL
+);
+
+ALTER TABLE Offer_Translate
+ADD COLUMN Language_Id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Offer_Translate
+ADD COLUMN Offer_Id int;
+
+      ALTER TABLE Offer_Translate 
+      ADD CONSTRAINT fk_Offer 
+      FOREIGN KEY(Offer_Id) 
+	  REFERENCES offer(id)
+	  ON DELETE SET NULL;
+
+
+CREATE TABLE Coupon (
+  ID SERIAL PRIMARY KEY         NOT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  Code varchar(250) DEFAULT NULL,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  start_date timestamp DEFAULT NULL,
+  end_date timestamp DEFAULT NULL,
+  ModificationDate timestamp DEFAULT NULL,
+  Discount_Amount varchar(250) DEFAULT NULL,
+  Discount_Percentage varchar(250) DEFAULT NULL,
+  condition varchar(250) DEFAULT NULL,
+  Used BOOL NOT NULL  DEFAULT 't'
+);
+ALTER TABLE Coupon
+ADD COLUMN Modified_By varchar(250) DEFAULT NULL;
+ALTER TABLE Coupon
+ADD COLUMN Created_By varchar(250) DEFAULT NULL;
+
+ALTER TABLE Coupon
+ADD COLUMN Object_Type_Id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Coupon
+ADD COLUMN Object_Id varchar(250) DEFAULT NULL;
+
+ALTER TABLE Coupon 
+ADD COLUMN user_Id varchar(250) DEFAULT NULL;
+
+CREATE TABLE Common_User (
+  ID SERIAL PRIMARY KEY         NOT NULL,
+  CreatedBy bigint DEFAULT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  Email varchar(250) DEFAULT NULL,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  Status BOOL NOT NULL  DEFAULT 't',
+  LastLoginDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  ModificationDate timestamp DEFAULT NULL,
+  ModifiedBy bigint DEFAULT NULL,
+  Name varchar(250) DEFAULT NULL,
+  Password varchar(333) NOT NULL,
+  Code varchar(250) DEFAULT NULL,
+  ImageUrl varchar(250) DEFAULT NULL,
+  IsMale BOOL DEFAULT NULL,
+  MobileNumber varchar(250) DEFAULT NULL,
+  Guid varchar(250) DEFAULT NULL,
+  Address varchar(750) DEFAULT NULL,
+  City varchar(250) DEFAULT NULL,
+  Country varchar(250) DEFAULT NULL,
+  Additional varchar(1000) DEFAULT NULL
+);
+
+CREATE TABLE Game (
+  ID SERIAL PRIMARY KEY  NOT NULL,
+  GamePhoto TEXT DEFAULT NULL,
+  GameType varchar(150) DEFAULT NULL,
+  GameCategory varchar(150) DEFAULT NULL,
+  GameAge int DEFAULT NULL,
+  GameName varchar(150) DEFAULT NULL,
+  GameDescription text DEFAULT NULL,
+  CreatedBy bigint DEFAULT NULL,
+  CreationDate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  IsDeleted BOOL NOT NULL  DEFAULT 'f',
+  ModificationDate timestamp DEFAULT NULL,
+  ModifiedBy bigint DEFAULT NULL,
+  GameDeveloperName varchar(500) DEFAULT NULL,
+  ParseObjectID varchar(150) DEFAULT NULL,
+  FeatureRatings double precision DEFAULT NULL,
+  Rank double precision DEFAULT NULL,
+  GooglePlayRankId bigint DEFAULT NULL,
+  GooglePlayDownloadCount int DEFAULT NULL,
+  AEDPriceFee_InAppPurchases varchar(150) DEFAULT NULL,
+  ShowInCatalog BOOL NOT NULL  DEFAULT 't',
+  GameVendorName varchar(150) DEFAULT NULL,
+  Tags TEXT DEFAULT NULL,
+  Monetization varchar(250) DEFAULT NULL,
+  GameThumb TEXT DEFAULT NULL,
+  ShowInHome BOOL NOT NULL  DEFAULT 'f'
+);
+	INSERT INTO public.common_user(
+email, name, password)
+	VALUES ('Test3@grandmstg.com','Test3', '123456');

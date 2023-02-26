@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Offer.API.Offer.DAL.DB;
 using Offer.BL.Services;
@@ -15,6 +16,7 @@ namespace Offer.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class OfferController : ControllerBase
     {
         private readonly OfferDbContext _context;
@@ -23,6 +25,23 @@ namespace Offer.API.Controllers
         {
             _context = context;
         }
+
+        //[HttpGet]
+        //[Route("Test")]
+        //[Produces("application/json")]
+        //public IActionResult Test()
+        //{
+        //    LogHelper.LogException("Message", "stackTrace");
+        //    try
+        //    {
+        //        var li = _context.Offers.ToList();
+        //        return Ok(li);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(ex.Message + " stack : " + ex.StackTrace);
+        //    }
+        //}
 
         [HttpGet]
         [Route("GetAll")]
@@ -142,7 +161,7 @@ namespace Offer.API.Controllers
         //    var offerReq = new OfferRequest();
         //    offerReq.OfferRecord = model;
         //    offerReq._context = _context;
-        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerReq.// BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
         //    offerResponse = OfferService.AddOffer(offerReq);
         //    return Ok(offerResponse);
         //}
@@ -161,7 +180,7 @@ namespace Offer.API.Controllers
         //    var offerReq = new OfferRequest();
         //    offerReq.OfferRecord = model;
         //    offerReq._context = _context;
-        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerReq.// BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
         //    offerResponse = OfferService.EditOffer(offerReq);
         //    return Ok(offerResponse);
         //}
@@ -180,7 +199,7 @@ namespace Offer.API.Controllers
         //    var offerReq = new OfferRequest();
         //    offerReq.OfferRecord = model;
         //    offerReq._context = _context;
-        //    offerReq.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+        //    offerReq.// BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
         //    offerResponse = OfferService.DeleteOffer(offerReq);
         //    return Ok(offerResponse);
         //}
@@ -204,7 +223,7 @@ namespace Offer.API.Controllers
                 }
 
                 model._context = _context;
-                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
                 offerResponse = OfferService.AddOffer(model);
             }
             catch (Exception ex)
@@ -235,7 +254,7 @@ namespace Offer.API.Controllers
                     return Ok(offerResponse);
                 }
                 model._context = _context;
-                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
                 offerResponse = OfferService.EditOffer(model);
             }
             catch (Exception ex)
@@ -265,7 +284,7 @@ namespace Offer.API.Controllers
                     return Ok(offerResponse);
                 }
                 model._context = _context;
-                model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
                 offerResponse = OfferService.DeleteOffer(model);
             }
             catch (Exception ex)
@@ -360,5 +379,301 @@ namespace Offer.API.Controllers
         //                  .ToArray());
         //    return Ok(result);
         //}
+
+        /// <summary>
+        /// Return Offer With id .
+        /// </summary>
+        [HttpGet("GetOfferTranslate/{Offerid}", Name = "GetOfferTranslate")]
+        [Produces("application/json")]
+        public IActionResult GetOfferTranslate(int Offerid)
+        {
+            var offerTranslateResponse = new OfferTranslateResponse();
+            try
+            {
+                var offerTranslateRequest = new OfferTranslateRequest
+                {
+                    _context = _context,
+                    OfferTranslateRecord = new OfferTranslateRecord
+                    {
+                        OfferId = Offerid
+                    }
+                };
+                offerTranslateResponse = OfferTranslateService.ListOfferTranslate(offerTranslateRequest);
+            }
+            catch (Exception ex)
+            {
+                offerTranslateResponse.Message = ex.Message;
+                offerTranslateResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+            return Ok(offerTranslateResponse);
+        }
+
+        /// <summary>
+        /// Creates OfferTranslate.
+        /// </summary>
+        [HttpPost]
+        [Route("AddOfferTranslate")]
+        [Produces("application/json")]
+        public IActionResult AddOfferTranslate([FromBody] OfferTranslateRequest model)
+        {
+            var offerTranslateResponse = new OfferTranslateResponse();
+            try
+            {
+                if (model == null)
+                {
+                    offerTranslateResponse.Message = "Empty Body";
+                    offerTranslateResponse.Success = false;
+                    return Ok(offerTranslateResponse);
+                }
+                offerTranslateResponse.Success = true;
+                var editedTranslateOffer = model.OfferTranslateRecords.Where(c => c.Id > 0).ToList();
+                if (editedTranslateOffer != null && editedTranslateOffer.Count() > 0)
+                {
+                    var editReq = new OfferTranslateRequest
+                    {
+                        _context = _context,
+                        // BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase,
+                        OfferTranslateRecords = editedTranslateOffer
+                    };
+                    offerTranslateResponse = OfferTranslateService.EditOfferTranslate(editReq);
+                }
+
+                var addedTranslateOffer = model.OfferTranslateRecords.Where(c => c.Id == 0).ToList();
+                if (addedTranslateOffer != null && addedTranslateOffer.Count() > 0)
+                {
+                    var addReq = new OfferTranslateRequest
+                    {
+                        _context = _context,
+                        // BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase,
+                        OfferTranslateRecords = addedTranslateOffer
+                    };
+                    offerTranslateResponse = OfferTranslateService.AddOfferTranslate(addReq);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                offerTranslateResponse.Message = ex.Message + ex.StackTrace;
+                offerTranslateResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return Ok(offerTranslateResponse);
+        }
+
+
+
+
+        /// <summary>
+        /// Remove OfferTranslate .
+        /// </summary>
+        [HttpPost]
+        [Route("DeleteOfferTranslate")]
+        [Produces("application/json")]
+        public IActionResult DeleteOfferTranslate([FromBody] OfferTranslateRequest model)
+        {
+            var offerTranslateResponse = new OfferTranslateResponse();
+            try
+            {
+                if (model == null)
+                {
+                    offerTranslateResponse.Message = "Empty Body";
+                    offerTranslateResponse.Success = false;
+                    return Ok(offerTranslateResponse);
+                }
+                model._context = _context;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerTranslateResponse = OfferTranslateService.DeleteOfferTranslate(model);
+            }
+            catch (Exception ex)
+            {
+                offerTranslateResponse.Message = ex.Message;
+                offerTranslateResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return Ok(offerTranslateResponse);
+        }
+
+        [HttpGet]
+        [Route("GetAllOfferType")]
+        [Produces("application/json")]
+        public IActionResult GetAllOfferType()
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                var offerTypeRequest = new OfferTypeRequest
+                {
+                    _context = _context
+                };
+                offerTypeResponse = OfferTypeService.ListOfferType(offerTypeRequest);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+            return Ok(offerTypeResponse);
+        }
+
+        /// <summary>
+        /// Return OfferType With id .
+        /// </summary>
+        [HttpGet()]
+        [Route("GetOfferType")]
+        [Produces("application/json")]
+        public IActionResult GetOfferType(int id)
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                var offerTypeRequest = new OfferTypeRequest
+                {
+                    _context = _context,
+                    OfferTypeRecord = new OfferTypeRecord
+                    {
+                        Id = id,
+                        //Valid = true
+                    }
+                };
+                offerTypeResponse = OfferTypeService.ListOfferType(offerTypeRequest);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+            return Ok(offerTypeResponse);
+        }
+
+        /// <summary>
+        /// Return List Of OfferTypes With filter valid and any  needed filter like id,name,...  .
+        /// </summary>
+        [HttpPost]
+        [Route("GetFilteredOfferType")]
+        [Produces("application/json")]
+        public IActionResult GetFilteredOfferType([FromBody] OfferTypeRequest model)
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                if (model == null)
+                {
+                    model = new OfferTypeRequest();
+                }
+                model._context = _context;
+                //model.IsDesc = true;
+                //model.OrderByColumn = "Id";
+
+                offerTypeResponse = OfferTypeService.ListOfferType(model);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return Ok(offerTypeResponse);
+        }
+
+        /// <summary>
+        /// Creates OfferType, Uncheck Send empty value in Id,Creationdate,Isdeleted,IsDesc,PageSize,PageIndex.
+        /// </summary>
+        [HttpPost]
+        [Route("AddOfferType")]
+        [Produces("application/json")]
+        public IActionResult AddOfferType([FromBody] OfferTypeRequest model)
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                if (model == null)
+                {
+                    offerTypeResponse.Message = "Empty Body";
+                    offerTypeResponse.Success = false;
+                    return Ok(offerTypeResponse);
+                }
+
+                model._context = _context;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerTypeResponse = OfferTypeService.AddOfferType(model);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return Ok(offerTypeResponse);
+        }
+
+        /// <summary>
+        /// Update OfferType , Uncheck Send empty value in Id,Creationdate,Isdeleted,IsDesc,PageSize,PageIndex.
+        /// </summary>
+        [HttpPost]
+        [Route("EditOfferType")]
+        [Produces("application/json")]
+        public IActionResult EditOfferType([FromBody] OfferTypeRequest model)
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                if (model == null)
+                {
+                    offerTypeResponse.Message = "Empty Body";
+                    offerTypeResponse.Success = false;
+                    return Ok(offerTypeResponse);
+                }
+                model._context = _context;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerTypeResponse = OfferTypeService.EditOfferType(model);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+            return Ok(offerTypeResponse);
+        }
+
+        /// <summary>
+        /// Remove OfferType .
+        /// </summary>
+        [HttpPost]
+        [Route("DeleteOfferType")]
+        [Produces("application/json")]
+        public IActionResult DeleteOfferType([FromBody] OfferTypeRequest model)
+        {
+            var offerTypeResponse = new OfferTypeResponse();
+            try
+            {
+                if (model == null)
+                {
+                    offerTypeResponse.Message = "Empty Body";
+                    offerTypeResponse.Success = false;
+                    return Ok(offerTypeResponse);
+                }
+                model._context = _context;
+                // model.BaseUrl = Request.Scheme + "://" + Request.Host.Value + Request.PathBase;
+                offerTypeResponse = OfferTypeService.DeleteOfferType(model);
+            }
+            catch (Exception ex)
+            {
+                offerTypeResponse.Message = ex.Message;
+                offerTypeResponse.Success = false;
+                LogHelper.LogException(ex.Message, ex.StackTrace);
+            }
+
+            return Ok(offerTypeResponse);
+        }
+
+
     }
 }

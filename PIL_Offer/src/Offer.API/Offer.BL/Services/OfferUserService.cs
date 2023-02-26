@@ -24,7 +24,11 @@ namespace Offer.BL.Services
                      {
                          Id = c.Id,
                          Offerid = c.Offerid,
-                         UserId = c.UserId
+                         UserId = c.UserId,
+                         CreatedBy = c.CreatedBy,
+                         Creationdate = c.Creationdate,
+                         Modificationdate = c.Modificationdate,
+                         ModifiedBy = c.ModifiedBy,
                      });
 
                      if (request.OfferUserRecord != null)
@@ -34,8 +38,7 @@ namespace Offer.BL.Services
 
                      query = OrderByDynamic(query, request.OrderByColumn, request.IsDesc);
 
-                     if (request.PageSize > 0)
-                         query = ApplyPaging(query, request.PageSize, request.PageIndex);
+                     query = request.PageSize > 0 ? ApplyPaging(query, request.PageSize, request.PageIndex) : ApplyPaging(query, request.DefaultPageSize, 0);
 
                      res.OfferUserRecords = query.ToList();
                      res.Message = HttpStatusCode.OK.ToString();

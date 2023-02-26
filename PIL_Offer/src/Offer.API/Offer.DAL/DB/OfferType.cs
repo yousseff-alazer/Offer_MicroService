@@ -5,15 +5,22 @@ using System.Collections.Generic;
 
 namespace Offer.API.Offer.DAL.DB
 {
-    public partial class OfferUser
+    public partial class OfferType
     {
+        public OfferType()
+        {
+            Offers = new HashSet<Offer>();
+        }
+
         public int Id { get; set; }
         public DateTime Creationdate { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
         public bool Isdeleted { get; set; }
         public DateTime? Modificationdate { get; set; }
-        public long? Offerid { get; set; }
         public string ModifiedBy { get; set; }
         public string CreatedBy { get; set; }
-        public string UserId { get; set; }
+
+        public virtual ICollection<Offer> Offers { get; set; }
     }
 }
